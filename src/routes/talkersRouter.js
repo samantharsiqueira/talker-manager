@@ -55,4 +55,28 @@ router.post(
   },
 );
 
+router.put(
+  '/:id',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateWatchedAt,
+  validateRate,
+  async (req, res) => {
+    const { id } = req.params;
+    const newTalker = { ...req.body, id: parseInt(id, 10) };
+    const talkers = await getTalkers();
+
+    const talkerIndex = talkers.findIndex((t) => t.id === parseInt(id, 10));
+    if (talkerIndex === -1) {
+      return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+    }
+
+    talkers[talkerIndex] = newTalker;
+    await writeTalkers(talkers);
+    res.status(200).json(newTalker);
+  },
+);
+
 module.exports = router; 
