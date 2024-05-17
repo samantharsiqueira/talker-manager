@@ -79,4 +79,16 @@ router.put(
   },
 );
 
+router.delete('/:id', validateToken, async (req, res) => {
+  const { id } = req.params;
+  const talkers = await getTalkers();
+  const talkerIndex = talkers.findIndex((t) => t.id === parseInt(id, 10));
+  if (talkerIndex === -1) {
+    return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  }
+  talkers.splice(talkerIndex, 1);
+  await writeTalkers(talkers);
+  res.sendStatus(204);
+});
+
 module.exports = router; 
