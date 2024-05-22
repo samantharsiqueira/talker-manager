@@ -29,6 +29,24 @@ router.get('/', async (req, res) => {
   res.status(200).json(talkers);
 });
 
+router.get('/search', validateToken, async (req, res) => { 
+  const { q } = req.query;
+  const talkers = await getTalkers();
+  console.log(talkers);
+  if (!q || q === '') {
+    return res.status(200).json(talkers);
+  }
+
+  const filteredTalkers = talkers.filter((talker) =>
+    talker.name.toLowerCase().includes(q.toLowerCase()));
+
+  if (filteredTalkers.length === 0) {
+    return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  }
+
+  res.status(200).json(filteredTalkers);
+});
+
 router.get('/:id', async (req, res) => { 
   const { id } = req.params;
   const talkers = await getTalkers();

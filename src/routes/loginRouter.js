@@ -17,7 +17,6 @@ function randomToken(length) {
 
 router.post('/', validateEmail, validatePassword, (_req, res) => {
   const token = randomToken(16);
-  console.log(token);
   res.status(200).json({ token });
 });
 
